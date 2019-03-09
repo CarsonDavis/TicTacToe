@@ -1,7 +1,7 @@
 from random import choice
 
 
-class Game():
+class Game:
     def __init__(self, player_piece=1):
         self.current_board = [[0, 0, 0],
                               [0, 0, 0],
@@ -17,7 +17,8 @@ class Game():
         # piece is {'O':-1, 'X':1}
         # will accept invalid moves, error handling needs to be somewhere else
 
-        if not piece: piece = self.player_piece
+        if not piece:
+            piece = self.player_piece
 
         position = int(position)
 
@@ -63,3 +64,26 @@ class Game():
 
     def computer_move(self):
         return choice(list(self.valid_moves)), self.computer_piece
+
+
+def play_human_vs_computer():
+    game = Game()
+
+    turn_map = {-1: {'name': 'computer', 'move function': game.computer_move},
+                1: {'name': 'player', 'move function': input}
+                }
+
+    whose_move = 1
+
+    print('Your Move')
+    game.print_board()
+
+    while not game.game_over:
+        game.move(*turn_map[whose_move]['move function']())
+
+        print(turn_map[whose_move]['name'] + "'s move")
+        game.print_board()
+        print()
+        whose_move *= -1
+
+    print(turn_map[(whose_move * -1)]['name'], ' wins!')
