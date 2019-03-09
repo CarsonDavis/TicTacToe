@@ -62,8 +62,12 @@ class Game:
         for row in range(3):
             print(board[row])
 
-    def computer_move(self):
-        return choice(list(self.valid_moves)), self.computer_piece
+    def computer_move(self, piece=None):
+
+        if not piece:
+            piece = self.computer_piece
+
+        return choice(list(self.valid_moves)), piece
 
 
 def play_human_vs_computer():
@@ -80,6 +84,28 @@ def play_human_vs_computer():
 
     while not game.game_over:
         game.move(*turn_map[whose_move]['move function']())
+
+        print(turn_map[whose_move]['name'] + "'s move")
+        game.print_board()
+        print()
+        whose_move *= -1
+
+    print(turn_map[(whose_move * -1)]['name'], ' wins!')
+
+def play_computer_vs_computer():
+    game = Game()
+
+    turn_map = {-1: {'name': 'computer 1', 'move function': game.computer_move},
+                1: {'name': 'computer 2', 'move function': game.computer_move}
+                }
+
+    whose_move = 1
+
+    print('Your Move')
+    game.print_board()
+
+    while not game.game_over:
+        game.move(*turn_map[whose_move]['move function'](whose_move))
 
         print(turn_map[whose_move]['name'] + "'s move")
         game.print_board()
