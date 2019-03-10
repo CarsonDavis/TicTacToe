@@ -109,8 +109,7 @@ class Game:
             if move in self.valid_moves:
                 return move, piece
 
-
-def play_human_vs_computer():
+def play():
     game = Game()
 
     turn_map = {-1: {'name': 'computer', 'move function': game.computer_move},
@@ -137,46 +136,11 @@ def play_human_vs_computer():
 
     print(turn_map[(whose_move * -1)]['name'], ' wins!')
 
-def play_computer_vs_computer():
-    game = Game()
-
-    turn_map = {-1: {'name': 'computer 1', 'move function': game.computer_move},
-                1: {'name': 'computer 2', 'move function': game.computer_move},
-                'tie': {'name': 'nobody'}
-                }
-
-    whose_move = 1
-
-    print('Your Move')
-    game.print_board()
-
-    while not game.game_over:
-
-        if not game.valid_moves:
-            print('there was a tie')
-            game.winner = 'tie'
-            break
-
-        game.move(*turn_map[whose_move]['move function'](whose_move))
-
-        print(turn_map[whose_move]['name'] + "'s move")
-        game.print_board()
-        print()
-        whose_move *= -1
-
-    if not game.winner:
-        game.winner = whose_move * -1
-
-    print(turn_map[game.winner]['name'], ' wins!')
-
-    return game.board_history, game.move_history, game.winner
-
-
 def make_data():
     game = Game()
 
-    turn_map = {-1: {'name': 'computer 1', 'move function': game.smart_move},
-                1: {'name': 'computer 2', 'move function': game.computer_move},
+    turn_map = {-1: {'name': 'player 2', 'move function': game.smart_move},
+                1: {'name': 'player 1', 'move function': game.smart_move},
                 'tie': {'name': 'nobody'}
                 }
 
@@ -195,7 +159,7 @@ def make_data():
         game.winner = whose_move * -1
 
     if game.winner == 1:
-        return game.board_history, game.move_history
+        return game.board_history, game.move_history, game.winner
     else:
-        return None, None
+        return None, None, game.winner
 

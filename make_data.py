@@ -3,8 +3,8 @@ import json
 
 json_path = 'first_ai_training_data.json'
 
-winner_history = {-1: {'name': 'computer 1', 'wins': 0},
-            1: {'name': 'computer 2', 'wins': 0},
+winner_history = {-1: {'name': 'player 2', 'wins': 0},
+            1: {'name': 'player 1', 'wins': 0},
             'tie': {'name': 'nobody', 'wins': 0}
             }
 
@@ -13,7 +13,10 @@ all_moves = []
 wins = 0
 for round in range(25000):
 
-    new_boards, new_moves = make_data()
+    new_boards, new_moves, winner = make_data()
+
+    winner_history[winner]['wins'] += 1
+
     temp_boards = []
 
     if new_boards:
@@ -31,7 +34,10 @@ for round in range(25000):
 
 data = {'boards': all_boards,
         'moves': all_moves}
-print(wins)
+
+for player in winner_history.keys():
+    print(winner_history[player]['name'], winner_history[player]['wins'])
+
 with open(json_path, 'w') as outfile:
     json.dump(data, outfile)
 
