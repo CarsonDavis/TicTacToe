@@ -1,7 +1,7 @@
 from random import choice
 from keras.models import load_model
 import numpy as np
-model = load_model('random_model.h5')
+model = load_model('Models and Data/First Attempt/random_model.h5')
 
 
 class Game:
