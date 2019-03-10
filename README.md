@@ -8,6 +8,19 @@ Input your move as a number from 0-8, corresponding to the position on the board
 
 There is no error checking since human players are only for game verification. 
 
+
+### First Training Methodology
+
+For the first training, I had the computer play itself 25,000 times. Both players chose 
+completely random moves. I only recorded games won by player 1. All moves made by 
+player 1 in a won game are assumed to be good moves. A single training example consists 
+of one board state and the move that player 1 played for that board state. Therefor the 
+resulting model accepts a board state and outputs a move.
+
+Further work will involve iterative play throughs using the trained models instead of 
+random moves. The resulting data will be used to generate better models.
+
+
 ### First Training Results
 
 <b> Both players use random moves: </b>
