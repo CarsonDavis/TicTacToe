@@ -1,4 +1,4 @@
-from TicTacToe import *
+from TicTacToe import make_data
 import json
 
 json_path = 'Models and Data/First Attempt Refactor/training_data.json'
