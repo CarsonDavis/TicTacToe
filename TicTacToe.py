@@ -23,11 +23,9 @@ class Game:
         # piece is {'O':-1, 'X':1}
         # will accept invalid moves, error handling needs to be somewhere else
 
-        # I am only training player 1 to win, and will therefor only record 1's moves
-        if piece == 1:
-            # so this ridiculous bit is necessary because otherwise python will use references on the internal lists
-            self.board_history += [[[j for j in i] for i in self.current_board]]
-            self.move_history.append(position)
+        # so this ridiculous bit is necessary because otherwise python will use references on the internal lists
+        self.board_history += [[[j for j in i] for i in self.current_board]]
+        self.move_history.append(position)
 
         if not piece:
             piece = self.player_piece
@@ -85,7 +83,7 @@ class Game:
 
         return list(model.predict(np_board)[0])
 
-    def computer_move(self, piece=None):
+    def random_move(self, piece=None):
 
         if not piece:
             piece = self.computer_piece
@@ -100,6 +98,8 @@ class Game:
         if not piece:
             piece = self.computer_piece
 
+        print(piece)
+
         prediction_list = self.board_to_prediction_list()
 
         while True:
@@ -112,7 +112,7 @@ class Game:
 def play():
     game = Game()
 
-    turn_map = {-1: {'name': 'computer', 'move function': game.computer_move},
+    turn_map = {-1: {'name': 'computer', 'move function': game.random_move},
                 1: {'name': 'player', 'move function': input}
                 }
 
@@ -139,8 +139,8 @@ def play():
 def make_data():
     game = Game()
 
-    turn_map = {-1: {'name': 'player 2', 'move function': game.smart_move},
-                1: {'name': 'player 1', 'move function': game.smart_move},
+    turn_map = {-1: {'name': 'player 2', 'move function': game.random_move},
+                1: {'name': 'player 1', 'move function': game.random_move},
                 'tie': {'name': 'nobody'}
                 }
 
@@ -158,7 +158,7 @@ def make_data():
     if not game.winner:
         game.winner = whose_move * -1
 
-    if game.winner == 1:
+    if game.winner != 'tie':
         return game.board_history, game.move_history, game.winner
     else:
         return None, None, game.winner
