@@ -1,7 +1,7 @@
 from TicTacToe import *
 import json
 
-json_path = 'random_ai_training_data.json'
+json_path = 'first_ai_training_data.json'
 
 winner_history = {-1: {'name': 'computer 1', 'wins': 0},
             1: {'name': 'computer 2', 'wins': 0},
@@ -10,7 +10,7 @@ winner_history = {-1: {'name': 'computer 1', 'wins': 0},
 
 all_boards = []
 all_moves = []
-
+wins = 0
 for round in range(25000):
 
     new_boards, new_moves = make_data()
@@ -27,9 +27,11 @@ for round in range(25000):
 
         all_moves += new_moves
 
+        wins += 1
+
 data = {'boards': all_boards,
         'moves': all_moves}
-
+print(wins)
 with open(json_path, 'w') as outfile:
     json.dump(data, outfile)
 

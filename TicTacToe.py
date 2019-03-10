@@ -1,4 +1,7 @@
 from random import choice
+from keras.models import load_model
+import numpy as np
+model = load_model('random_model.h5')
 
 
 class Game:
@@ -71,6 +74,17 @@ class Game:
         for row in range(3):
             print(board[row])
 
+    def board_to_prediction_list(self, board=None):
+        if not board:
+            board = self.current_board
+
+        vector_board = []
+        for row in board:
+            vector_board += row
+        np_board = np.array([vector_board])
+
+        return list(model.predict(np_board)[0])
+
     def computer_move(self, piece=None):
 
         if not piece:
@@ -80,6 +94,20 @@ class Game:
             print('aaaahhhh')
 
         return choice(list(self.valid_moves)), piece
+
+    def smart_move(self, piece=None):
+
+        if not piece:
+            piece = self.computer_piece
+
+        prediction_list = self.board_to_prediction_list()
+
+        while True:
+            move = prediction_list.index(max(prediction_list))
+            prediction_list[move] = 0
+
+            if move in self.valid_moves:
+                return move, piece
 
 
 def play_human_vs_computer():
@@ -140,11 +168,6 @@ def play_computer_vs_computer():
         game.winner = whose_move * -1
 
     print(turn_map[game.winner]['name'], ' wins!')
-    #
-    # if game.winner == 1:
-    #     return game.board_history, game.move_history
-    # else:
-    #     return None
 
     return game.board_history, game.move_history, game.winner
 
@@ -152,7 +175,7 @@ def play_computer_vs_computer():
 def make_data():
     game = Game()
 
-    turn_map = {-1: {'name': 'computer 1', 'move function': game.computer_move},
+    turn_map = {-1: {'name': 'computer 1', 'move function': game.smart_move},
                 1: {'name': 'computer 2', 'move function': game.computer_move},
                 'tie': {'name': 'nobody'}
                 }
