@@ -50,3 +50,5 @@ As expected, when the model plays itself, it plays an identical game 25,000 time
 To address these issues, I am going to remake a new baseline data set with a record of the winning moves from all games, not just Player 1's. 
 
 I'm not sure I should train on tie games. I think a player playing to win will tie or win. So my instict is to not use them for training.
+
+Note: After some consideration, I think player 2's boards need to be multiplied by -1 before being fed into the model. Doing this could resolve some issues.
