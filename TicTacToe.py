@@ -100,23 +100,6 @@ class Game:
             if move in self.valid_moves:
                 return move, piece
  
-    # def old_model(self, piece):
-        
-    #     # turn the board into a vector that can be consumed by the model
-    #     board_vector = self.board_to_vector(self.current_board, piece)
-
-    #     # run the board through the model and generated predictions
-    #     prediction_list = list(old_model.predict(board_vector)[0])
-
-    #     while True:
-    #         # take the move with the highest predicted value then remove it from the prediction list
-    #         move = prediction_list.index(max(prediction_list))
-    #         prediction_list[move] = 0
-            
-    #         # make sure the move predicted by the model is actually available
-    #         if move in self.valid_moves:
-    #             return move, piece
-
     def player_move(self, piece):
         
         try:
