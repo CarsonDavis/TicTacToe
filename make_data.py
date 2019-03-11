@@ -11,7 +11,7 @@ winner_history = {1: {'name': 'player 1', 'wins': 0},
 all_boards = []
 all_moves = []
 wins = 0
-for round in range(40000):
+for round in range(10000):
 
     # new_boards, new_moves, winner = make_data()
     all_new_boards, all_new_moves, winner = play(False)
