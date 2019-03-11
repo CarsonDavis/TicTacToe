@@ -1,7 +1,7 @@
 from random import choice
 from keras.models import load_model
 import numpy as np
-model = load_model('Models and Data/First Attempt/random_model.h5')
+model = load_model('Models and Data/First Attempt Refactor/both_players_model.h5')
 
 
 class Game:
@@ -140,7 +140,7 @@ def make_data():
     game = Game()
 
     turn_map = {-1: {'name': 'player 2', 'move function': game.random_move},
-                1: {'name': 'player 1', 'move function': game.random_move},
+                1: {'name': 'player 1', 'move function': game.smart_move},
                 'tie': {'name': 'nobody'}
                 }
 

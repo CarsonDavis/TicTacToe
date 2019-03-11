@@ -18,7 +18,6 @@ for round in range(25000):
 
     winner_history[winner]['wins'] += 1
 
-    #new below
     new_boards = []
     new_moves = []
 
@@ -30,10 +29,9 @@ for round in range(25000):
     elif winner == -1:
         for i in range(len(all_new_moves)):
             if i % 2 != 0:
-                new_boards.append(all_new_boards[i])
+                temp = [[num * -1 for num in row] for row in all_new_boards[i]] # boards must be inverted for player 2
+                new_boards.append(temp)
                 new_moves.append(all_new_moves[i]) 
-    # new above
-
 
     temp_boards = []
 
@@ -56,7 +54,7 @@ data = {'boards': all_boards,
 for player in winner_history.keys():
     print(winner_history[player]['name'], winner_history[player]['wins'])
 
-with open(json_path, 'w') as outfile:
-    json.dump(data, outfile)
+# with open(json_path, 'w') as outfile:
+#     json.dump(data, outfile)
 
 
