@@ -11,38 +11,38 @@ Total boards trained: 176,427
 
 <b> Both players use random moves: </b>
 
-First Player : 
+First Player : 5771
 
-Second Player : 
+Second Player : 2902
 
-Ties: 
+Ties: 1327
 
 
 <b>First Player uses Model:</b>
 
-First Player : 
+First Player : 9734
 
-Second Player : 
+Second Player : 102
 
-Ties: 
+Ties: 164
 
 
 <b>Second Player uses Model:</b>
 
-First Player : 
+First Player : 1466
 
-Second Player : 
+Second Player : 8495
 
-Ties: 
+Ties: 39
 
 
 <b>Both Players use Model:</b>
 
-First Player : 
+First Player : 10000
 
-Second Player : 
+Second Player : 0
 
-Ties: 
+Ties: 0
 
 # Problems and Next Steps
 
