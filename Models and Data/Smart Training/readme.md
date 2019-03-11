@@ -44,8 +44,13 @@ Second Player : 0
 
 Ties: 0
 
+# Old Model vs New Model
+
+Smart v Old: 10000 | 0 | 0
+Olv v Smart: 10000 | 0 | 0
+
 # Problems and Next Steps
 
 These results seem functionally identical to the model trained only on random vs random games. 
 
-I think the next step is to gather data from games where the model loses to a random player. Use those games as 50% of the next training data.
+I think the next step is to gather data from games where the model loses to a random player. Use those games as 50% of the next training data.git
