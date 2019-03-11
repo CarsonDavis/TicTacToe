@@ -42,7 +42,7 @@ Ties: 0
 
 # Problems and Next Steps
 
-A perfect model used by the second player should always result in a  draw or a win. So although this model does better
+A perfect model used by the second player should always result in a draw or a win. So although this model does better
 than chance, it is not prefect yet. 
 
 As expected, when the model plays itself, it plays an identical game 25,000 times. However, that game should have been a tie.

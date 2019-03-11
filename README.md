@@ -2,58 +2,75 @@
 Standard TicTacToe game. Made to experiment with reinforcement deep learning.
 
 
+
 ### How to Play
 Download the repository and run play_TicTacToe.py. 
 Input your move as a number from 0-8, corresponding to the position on the board.
 
-There is no error checking since human players are only for game verification. 
+# Current Methodology
+An initial model was trained on the data gathered from 25,000 random games. Only moves played by the winner of each game were used as training data.
+
+A second model was trained by having the computer play itself in various configurations of random or using the initial model. Only moves played by the winner of each game were used as training data.
+
+Details are recorded below:
+
+Smart vs Random: 40k - kept all wins from both players - Wins: 38916 | 429 | 655
+
+Random vs Smart: 40k - kept all wins from both players- Wins: 5962 | 33875 | 163
+
+Random vs Random: 20k - kept all wins from both players - Wins: 11585 | 5900 | 2515
+
+# Model Results on 10,000 Games
+
+<b> BASELINE: Both players use random moves: </b>
+
+First Player : 5842
+
+Second Player : 2839
+
+Ties: 1319
 
 
-### First Training Methodology
+<b>First Player uses Model:</b>
 
-For the first training, I had the computer play itself 25,000 times. Both players chose 
-completely random moves. I only recorded games won by player 1. All moves made by 
-player 1 in a won game are assumed to be good moves. A single training example consists 
-of one board state and the move that player 1 played for that board state. Therefor the 
-resulting model accepts a board state and outputs a move.
+First Player : 9745
 
-Further work will involve iterative play throughs using the trained models instead of 
-random moves. The resulting data will be used to generate better models.
+Second Player : 103
+
+Ties: 152
 
 
-### First Training Results
+<b>Second Player uses Model:</b>
 
-<b> Both players use random moves: </b>
+First Player : 1520
 
-First Player : 14669
+Second Player : 8451
 
-Second Player : 7145
-
-Ties: 3186
+Ties: 29
 
 
-<b>First Player uses Training Data:</b>
+<b>Both Players use Model:</b>
 
-First Player : 22677
-
-Second Player : 1080
-
-Ties: 1243
-
-
-<b>Second Player uses Training Data:</b>
-
-First Player : 5588
-
-Second Player : 16120
-
-Ties: 3292
-
-
-<b>Both Players use Training Data:</b>
-
-First Player : 25000
+First Player : 10000
 
 Second Player : 0
 
 Ties: 0
+
+<b>Old Model vs New Model</b>
+
+Smart v Old: 10000 | 0 | 0
+
+Old v Smart: 10000 | 0 | 0
+
+# Problems and Next Steps
+
+These results seem functionally identical to the model trained only on random vs random games. 
+
+Although this model does much better than randomly generated moves, especially when playing as Player 1, it is still not playing perfectly. 
+
+A perfect model would never lose, and would always either win or tie. When played against itself, it would always tie. It would also win quickly, not choosing to block the oppenent instead of winning directly as the current model sometimes does.
+
+As a next step, I am currently gathering data from the games where the model still manages to lose to a random player. I will figure out some way to empahsize those training examples and see if I can close the gaps in the model's strategy. 
+
+If the results from that iteration are not satisfactory, then an additional step will be to give preferential treatment to fast games, where the model wins quickly.
