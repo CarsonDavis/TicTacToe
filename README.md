@@ -74,3 +74,5 @@ A perfect model would never lose, and would always either win or tie. When playe
 As a next step, I am currently gathering data from the games where the model still manages to lose to a random player. I will figure out some way to empahsize those training examples and see if I can close the gaps in the model's strategy. 
 
 If the results from that iteration are not satisfactory, then an additional step will be to give preferential treatment to fast games, where the model wins quickly.
+
+After finishing the initial experiments, I will make a recursive trainer that plays small batches of games and then retrains the model, updating its strategy with every iteration. To prevent stagnation, I will have the model player alternate between using random moves and the current model. As model performance increases, the percent of random moves will be decreased until the model no longer loses games against a random player.
