@@ -1,7 +1,7 @@
 from random import choice
 from keras.models import load_model
 import numpy as np
-model = load_model('Models and Data/First Attempt Refactor/both_players_model.h5')
+model = load_model('Models and Data/Smart Training/training_data_creation_model.h5')
 
 # TODO: think about tracking the current player instead of passing around piece to every function
 # TODO: integrate the play function into the class
@@ -116,8 +116,8 @@ def play(print_on=True):
     # change the functions in the turn map if you want to modify who plays who
     game = Game()
 
-    turn_map = {1: {'name': 'Player 1', 'move function': game.smart_move},
-               -1: {'name': 'Player 2', 'move function': game.player_move},
+    turn_map = {1: {'name': 'Player 1', 'move function': game.random_move},
+               -1: {'name': 'Player 2', 'move function': game.smart_move},
                 }
 
     whose_move = 1

@@ -1,7 +1,7 @@
-from TicTacToe import make_data
+from TicTacToe import play
 import json
 
-json_path = 'Models and Data/First Attempt Refactor/training_data.json'
+json_path = 'Models and Data/.json'
 
 winner_history = {1: {'name': 'player 1', 'wins': 0},
                  -1: {'name': 'player 2', 'wins': 0},
@@ -11,10 +11,10 @@ winner_history = {1: {'name': 'player 1', 'wins': 0},
 all_boards = []
 all_moves = []
 wins = 0
-for round in range(25000):
+for round in range(40000):
 
     # new_boards, new_moves, winner = make_data()
-    all_new_boards, all_new_moves, winner = make_data()
+    all_new_boards, all_new_moves, winner = play(False)
 
     winner_history[winner]['wins'] += 1
 
