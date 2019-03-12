@@ -1,7 +1,7 @@
 from random import choice
 from keras.models import load_model
 import numpy as np
-model = load_model('Models and Data/Loss Training/pre-trainied_loss_model.h5')
+model = load_model('Models and Data/Smart Training/smart_model.h5')
 # old_model = load_model('Models and Data/Random Training/random_model.h5')
 
 # TODO: think about tracking the current player instead of passing around piece to every function
@@ -93,7 +93,7 @@ class Game:
         # run the board through the model and generated predictions
         prediction_list = list(model.predict(board_vector)[0])
 
-        while True:
+        while sum(prediction_list):
             # take the move with the highest predicted value then remove it from the prediction list
             move = prediction_list.index(max(prediction_list))
             prediction_list[move] = 0
@@ -101,6 +101,9 @@ class Game:
             # make sure the move predicted by the model is actually available
             if move in self.valid_moves:
                 return move, piece
+
+        # this is only executed if there are no non-negative predictions left
+        return choice(list(self.valid_moves)), piece
 
     def player_move(self, piece):
 
@@ -143,7 +146,7 @@ def play(print_on=True):
     if game.winner != 'tie':
         game.winner = whose_move * -1
 
-    if game.winner == 'tie':
+    if game.winner == 'tie' or game.winner == 1:
         game.board_history = None
         game.move_history = None
 
