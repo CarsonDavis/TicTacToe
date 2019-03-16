@@ -19,8 +19,12 @@ class Game:
         self.valid_moves = set(range(9))
         self.game_over = False
         self.winner = None
+        self.whose_move = 1
 
-    def move(self, position, player):
+    def move(self, position):
+  
+        # print(self.whose_move, 'moved', position)
+        # print()
 
         # update board and move history
         self.board_history.append(self.current_board.copy())
@@ -30,31 +34,40 @@ class Game:
         self.valid_moves.remove(position)
 
         # make the move by updating the current board
-        self.current_board[position] = player
+        self.current_board[position] = self.whose_move
 
         # update the game over variable
         self.game_over = self.is_victory(self.current_board)
 
-        # print('Player', player, 'moved', position)
-        # print()
+        # update whose move (this needs to be the absolute last thing)
+        self.whose_move *= -1
 
     def is_victory(self, board):
 
+        over = False
+
         # rows
-        if abs(board[0]+board[1]+board[2]) == 3: return True
-        if abs(board[3]+board[4]+board[5]) == 3: return True
-        if abs(board[6]+board[7]+board[8]) == 3: return True 
+        if abs(board[0]+board[1]+board[2]) == 3: over = True
+        elif abs(board[3]+board[4]+board[5]) == 3: over = True
+        elif abs(board[6]+board[7]+board[8]) == 3: over = True 
 
         # cols
-        if abs(board[0]+board[3]+board[6]) == 3: return True
-        if abs(board[1]+board[4]+board[7]) == 3: return True
-        if abs(board[2]+board[5]+board[8]) == 3: return True
+        elif abs(board[0]+board[3]+board[6]) == 3: over = True
+        elif abs(board[1]+board[4]+board[7]) == 3: over = True
+        elif abs(board[2]+board[5]+board[8]) == 3: over = True
 
         # across
-        if abs(board[0]+board[4]+board[8]) == 3: return True
-        if abs(board[2]+board[4]+board[6]) == 3: return True
+        elif abs(board[0]+board[4]+board[8]) == 3: over = True
+        elif abs(board[2]+board[4]+board[6]) == 3: over = True
 
-        return False
+
+        if over == True:
+            self.winner = self.whose_move
+        elif not self.valid_moves:
+            self.winner = 'tie'
+            over = True
+            
+        return over
 
     def print_board(self, board):
 
@@ -62,21 +75,21 @@ class Game:
         print(board[3], board[4], board[5])
         print(board[6], board[7], board[8]) 
 
-    def board_to_vector(self, board, player):
+    def board_to_vector(self, board):
 
         # reverse board if player 2
-        if player == -1:
+        if self.whose_move == -1:
             board = [num * -1 for num in board]
 
         return np.array([board])
 
-    def random_move(self, player):
-        return choice(list(self.valid_moves)), player
+    def random_move(self):
+        return choice(list(self.valid_moves))
 
-    def smart_move(self, player):
+    def smart_move(self):
 
         # turn the board into a vector that can be consumed by the model
-        board_vector = self.board_to_vector(self.current_board, player)
+        board_vector = self.board_to_vector(self.current_board)
 
         # run the board through the model and generated predictions
         prediction_list = list(model.predict(board_vector)[0])
@@ -88,12 +101,12 @@ class Game:
 
             # make sure the move predicted by the model is actually available
             if move in self.valid_moves:
-                return move, player
+                return move
 
         # this is only executed if there are no non-negative predictions left
-        return choice(list(self.valid_moves)), player
+        return choice(list(self.valid_moves))
 
-    def player_move(self, player):
+    def player_move(self):
 
         try:
             move = int(input())
@@ -104,46 +117,39 @@ class Game:
             print('Please choose a valid move from', self.valid_moves)
             move = int(input())
 
-        return move, player
+        return move
 
 
-def play(print_on=True):
-    # change the functions in the turn map if you want to modify who plays who
-    game = Game()
+    def play(self, print_on=True):
+        # change the functions in the turn map if you want to modify who plays who
 
-    turn_map = {1: {'name': 'Player 1', 'move function': game.random_move},
-                -1: {'name': 'Player 2', 'move function': game.random_move},
-                }
+        turn_map = {1: {'name': 'Player 1', 'move function': self.random_move},
+                    -1: {'name': 'Player 2', 'move function': self.random_move},
+                    }
 
-    whose_move = 1
+        self.whose_move = 1
 
-    while not game.game_over:
+        while not self.game_over:
 
-        if not game.valid_moves:
-            game.winner = 'tie'
-            break
+            if print_on:
+                print(turn_map[self.whose_move]['name'] + "'s Move")
+                self.print_board(self.current_board)
+                print()
+
+            new_move = turn_map[self.whose_move]['move function']()
+            self.move(new_move)
+
 
         if print_on:
-            print(turn_map[whose_move]['name'] + "'s Move")
-            game.print_board(game.current_board)
+            self.print_board(self.current_board)
             print()
+            if self.winner == 'tie':
+                print('There was a tie!')
+            else:
+                print(turn_map[(self.whose_move * -1)]['name'], ' wins!')
 
-        game.move(*turn_map[whose_move]['move function'](whose_move))
-        whose_move *= -1
+        return self.board_history, self.move_history, self.winner
 
-    if game.winner != 'tie':
-        game.winner = whose_move * -1
-
-    # if game.winner == 'tie' or game.winner == 1:
-    #     game.board_history = None
-    #     game.move_history = None
-
-    if print_on:
-        game.print_board(game.current_board)
-        print()
-        if game.winner == 'tie':
-            print('There was a tie!')
-        else:
-            print(turn_map[(whose_move * -1)]['name'], ' wins!')
-
-    return game.board_history, game.move_history, game.winner
+def play(print_on=True):
+    game = Game()
+    return game.play(print_on)

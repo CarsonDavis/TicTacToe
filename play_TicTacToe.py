@@ -1,3 +1,4 @@
-from TicTacToe import *
+import TicTacToe
 
-play()
+TicTacToe.play()
+
