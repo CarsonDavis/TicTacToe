@@ -4,91 +4,79 @@ import numpy as np
 model = load_model('Models and Data/Smart Training/smart_model.h5')
 # old_model = load_model('Models and Data/Random Training/random_model.h5')
 
-# TODO: think about tracking the current player instead of passing around piece to every function
+# TODO: think about tracking the current player instead of passing around the player to every function
 # TODO: integrate the play function into the class
 
 
 class Game:
-    def __init__(self, player_piece=1):
-        self.current_board = [[0, 0, 0],
-                              [0, 0, 0],
-                              [0, 0, 0]]
+    def __init__(self):
+        self.current_board = [0, 0, 0,
+                              0, 0, 0,
+                              0, 0, 0]
+
         self.board_history = list()
         self.move_history = list()
-
         self.valid_moves = set(range(9))
-        self.player_piece = player_piece
-        self.computer_piece = -1 if player_piece == 1 else 1
         self.game_over = False
         self.winner = None
 
-    def move(self, position, piece):
+    def move(self, position, player):
 
         # update board and move history
-        # so this ridiculous bit is necessary because otherwise python will use references on the internal lists
-        self.board_history += [[[j for j in i] for i in self.current_board]]
+        self.board_history.append(self.current_board.copy())
         self.move_history.append(position)
 
         # remove move from total possible moves
         self.valid_moves.remove(position)
 
         # make the move by updating the current board
-        self.current_board[position // 3][position % 3] = piece
+        self.current_board[position] = player
 
         # update the game over variable
         self.game_over = self.is_victory(self.current_board)
 
+        # print('Player', player, 'moved', position)
+        # print()
+
     def is_victory(self, board):
 
         # rows
-        for row in board:
-            if sum(row) == 3 or sum(row) == -3:
-                return True
+        if abs(board[0]+board[1]+board[2]) == 3: return True
+        if abs(board[3]+board[4]+board[5]) == 3: return True
+        if abs(board[6]+board[7]+board[8]) == 3: return True 
 
-        # columns
-        for col in range(3):
-            total = 0
-            for row in range(3):
-                total += board[row][col]
-            if total == 3 or total == -3:
-                return True
+        # cols
+        if abs(board[0]+board[3]+board[6]) == 3: return True
+        if abs(board[1]+board[4]+board[7]) == 3: return True
+        if abs(board[2]+board[5]+board[8]) == 3: return True
 
         # across
-        total = board[0][0] + board[1][1] + board[2][2]
-        if total == 3 or total == -3:
-            return True
-
-        total = board[0][2] + board[1][1] + board[2][0]
-        if total == 3 or total == -3:
-            return True
+        if abs(board[0]+board[4]+board[8]) == 3: return True
+        if abs(board[2]+board[4]+board[6]) == 3: return True
 
         return False
 
     def print_board(self, board):
-        for row in range(3):
-            print(board[row])
 
-    def board_to_vector(self, board, piece):
+        print(board[0], board[1], board[2])
+        print(board[3], board[4], board[5])
+        print(board[6], board[7], board[8]) 
+
+    def board_to_vector(self, board, player):
 
         # reverse board if player 2
-        if piece == -1:
-            board = [[num * -1 for num in row] for row in board]
+        if player == -1:
+            board = [num * -1 for num in board]
 
-        # turn board into vector consumable by model
-        vector_board = []
-        for row in board:
-            vector_board += row
-        np_board = np.array([vector_board])
+        return np.array([board])
 
-        return np_board
+    def random_move(self, player):
+        return choice(list(self.valid_moves)), player
 
-    def random_move(self, piece):
-        return choice(list(self.valid_moves)), piece
-
-    def smart_move(self, piece):
+    def smart_move(self, player):
 
         # turn the board into a vector that can be consumed by the model
-        board_vector = self.board_to_vector(self.current_board, piece)
+        board_vector = self.board_to_vector(self.current_board, player)
 
         # run the board through the model and generated predictions
         prediction_list = list(model.predict(board_vector)[0])
@@ -100,12 +88,12 @@ class Game:
 
             # make sure the move predicted by the model is actually available
             if move in self.valid_moves:
-                return move, piece
+                return move, player
 
         # this is only executed if there are no non-negative predictions left
-        return choice(list(self.valid_moves)), piece
+        return choice(list(self.valid_moves)), player
 
-    def player_move(self, piece):
+    def player_move(self, player):
 
         try:
             move = int(input())
@@ -116,14 +104,14 @@ class Game:
             print('Please choose a valid move from', self.valid_moves)
             move = int(input())
 
-        return move, piece
+        return move, player
 
 
 def play(print_on=True):
     # change the functions in the turn map if you want to modify who plays who
     game = Game()
 
-    turn_map = {1: {'name': 'Player 1', 'move function': game.smart_move},
+    turn_map = {1: {'name': 'Player 1', 'move function': game.random_move},
                 -1: {'name': 'Player 2', 'move function': game.random_move},
                 }
 
@@ -146,9 +134,9 @@ def play(print_on=True):
     if game.winner != 'tie':
         game.winner = whose_move * -1
 
-    if game.winner == 'tie' or game.winner == 1:
-        game.board_history = None
-        game.move_history = None
+    # if game.winner == 'tie' or game.winner == 1:
+    #     game.board_history = None
+    #     game.move_history = None
 
     if print_on:
         game.print_board(game.current_board)
