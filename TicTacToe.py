@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, choices
 from keras.models import load_model
 import numpy as np
 # model = load_model('Models and Data/Baseline/all_possible_games_3462.h5')
@@ -119,13 +119,18 @@ class Game:
             move = int(input())
 
         return move
+    
+    def randomizer(self, func_1, func_2, probability):
+        if probability < 0 or probability > 1:
+            raise ValueError
+        return choices([func_1, func_2], [probability, 1-probability], k=1)[0]
 
 
-    def play(self, print_on=True):
+    def play(self, print_on=True, probability = .7):
         # change the functions in the turn map if you want to modify who plays who
 
-        turn_map = {1: {'name': 'Player 1', 'move function': self.random_move},
-                    -1: {'name': 'Player 2', 'move function': self.smart_move},
+        turn_map = {1: {'name': 'Player 1', 'move function': self.smart_move},
+                    -1: {'name': 'Player 2', 'move function': self.random_move},
                     }
 
         self.whose_move = 1
@@ -137,8 +142,8 @@ class Game:
                 self.print_board(self.current_board)
                 print()
 
-            new_move = turn_map[self.whose_move]['move function']()
-            self.move(new_move)
+            move_function = self.randomizer(turn_map[self.whose_move]['move function'], self.random_move, probability)
+            self.move(move_function())
 
         if print_on:
             self.print_board(self.current_board)
@@ -150,6 +155,4 @@ class Game:
 
         return self.board_history, self.move_history, self.winner
 
-def play(print_on=True):
-    game = Game()
-    return game.play(print_on)
+
