@@ -5,21 +5,25 @@ from keras.utils.np_utils import to_categorical
 from keras import models, layers, optimizers, losses, metrics
 from make_data import make_data
 
-winning_boards, winner_history = make_data(model = None, iterations = 1000, probability=0)
+winning_boards, model_test = make_data(model = None, iterations = 1000, probability=0)
+probability = .5
+
 
 print()
 print('##############################################################################################################################################')
 print('results of the initial random games')
-print(winner_history)
-print('wins using random', winner_history[1]['wins'])
+print(model_test)
+print('wins using random', model_test[1]['wins'])
 print('##############################################################################################################################################')
 print()
 
+all_winning_boards = winning_boards['boards']
+all_winning_moves = winning_boards['moves']
 
-for model_iteration in range(5):
+for model_iteration in range(10):
 
-    X = np.array(winning_boards['boards'])
-    y = to_categorical(winning_boards['moves'])
+    X = np.array(all_winning_boards)
+    y = to_categorical(all_winning_moves)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
     X_test, X_val, y_test, y_val = train_test_split(X_test, y_test, test_size=0.2, random_state=42)
@@ -49,12 +53,14 @@ for model_iteration in range(5):
 
     print(model.evaluate(X_val, y_val))
 
-    probability = (winner_history[1]['wins']/1000)
+    
     print('probability to use with new model', probability)
     winning_boards, winner_history = make_data(model = model, iterations = 1000, probability=probability)
-    print('wins with new model', winner_history[1]['wins'])
+    ignore_me, model_test = make_data(model = model, iterations = 1000, probability=1)
+    print('wins with new model', model_test[1]['wins'])
     print('##############################################################################################################################################')
     print()
 
-# for player in winner_history.keys():
-#     print(winner_history[player]['name'], winner_history[player]['wins'])
+    probability = (model_test[1]['wins']/1000)
+    all_winning_boards += winning_boards['boards'].copy()
+    all_winning_moves += winning_boards['moves'].copy()
