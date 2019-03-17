@@ -1,4 +1,5 @@
-import TicTacToe
+from TicTacToe import Game
 
-TicTacToe.play()
+game = Game()
+game.play(print_on = True)
 
