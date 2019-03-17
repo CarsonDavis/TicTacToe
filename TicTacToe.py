@@ -2,7 +2,7 @@ from random import choice, choices
 from keras.models import load_model
 import numpy as np
 # model = load_model('Models and Data/Baseline/all_possible_games_3462.h5')
-model = load_model('Models and Data/Baseline/all_possible_games_3.h5')
+# model = load_model('Models and Data/Baseline/all_possible_games_3.h5')
 # old_model = load_model('Models and Data/Random Training/random_model.h5')
 
 # TODO: think about tracking the current player instead of passing around the player to every function
@@ -10,7 +10,8 @@ model = load_model('Models and Data/Baseline/all_possible_games_3.h5')
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, model):
+        self.model = model
         self.current_board = [0, 0, 0,
                               0, 0, 0,
                               0, 0, 0]
@@ -93,7 +94,7 @@ class Game:
         board_vector = self.board_to_vector(self.current_board)
 
         # run the board through the model and generated predictions
-        prediction_list = list(model.predict(board_vector)[0])
+        prediction_list = list(self.model.predict(board_vector)[0])
 
         while sum(prediction_list):
             # take the move with the highest predicted value then remove it from the prediction list
