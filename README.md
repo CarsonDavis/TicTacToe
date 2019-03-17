@@ -7,6 +7,22 @@ Standard TicTacToe game. Made to experiment with reinforcement deep learning.
 Download the repository and run play_TicTacToe.py. 
 Input your move as a number from 0-8, corresponding to the position on the board.
 
+# Current Model that Never Loses
+
+After some experimentation and a huge 500,000 game training set, I was able to make a model (all_possible_games_3.h5) that never loses.
+I made several other similar models which lose only 1 game path out of all possible TicTacToe games.
+I don't consider this method to be extensible to other games, since 500k is not only a huge training set for other games, but it is also double the total number of unique tictactoe games. I don't think this is much different from brute forcing the solution. However, this was a useful exercise, since it demonstrates that the deep learning approach can work given enough data. 
+
+It is important to note that even though the model never loses, it doesn't win quite as many games as some of the other models that I made, which means that there are probably 1 or 2 game paths where it could have won, but played the wrong move and tied instead.
+
+# Next Steps
+
+I will make a recursive trainer that plays small batches of games and then retrains the model, updating its strategy with every iteration. To prevent stagnation, I will have the model player alternate between using random moves and the current model. As model performance increases, the percent of random moves will be decreased until the model no longer loses games against a random player.
+
+I hope to play around with this method and try to minimize the total number of training games required before the model never loses. I also want to create a model that never misses a win, and which ties against itself.
+
+# Old Information Below
+
 # Current Methodology
 An initial model was trained on the data gathered from 25,000 random games. Only moves played by the winner of each game were used as training data.
 
