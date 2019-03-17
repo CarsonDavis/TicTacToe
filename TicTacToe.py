@@ -126,7 +126,7 @@ class Game:
         return choices([func_1, func_2], [probability, 1-probability], k=1)[0]
 
 
-    def play(self, print_on=True, probability = .7):
+    def play(self, print_on=True, probability = 1):
         # change the functions in the turn map if you want to modify who plays who
 
         turn_map = {1: {'name': 'Player 1', 'move function': self.smart_move},
@@ -154,5 +154,3 @@ class Game:
                 print(turn_map[(self.whose_move * -1)]['name'], ' wins!')
 
         return self.board_history, self.move_history, self.winner
-
-
