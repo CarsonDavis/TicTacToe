@@ -1,7 +1,7 @@
 import TicTacToe
 import json
 
-# json_path = 'Models and Data/Loss Training/Smart_Loses_to_Random.json'
+# json_path = 'Models and Data/Baseline/all_possible_games.json'
 
 winner_history = {1: {'name': 'player 1', 'wins': 0},
                   -1: {'name': 'player 2', 'wins': 0},
@@ -11,7 +11,7 @@ winner_history = {1: {'name': 'player 1', 'wins': 0},
 all_boards = []
 all_moves = []
 
-for game in range(5):
+for game in range(10000):
 
     # new_boards, new_moves, winner = make_data()
     new_boards, new_moves, winner = TicTacToe.play(print_on = False)
@@ -28,6 +28,9 @@ for game in range(5):
                 filtered_moves.append(new_moves[i])
 
     elif winner == -1:
+        print(winner)
+        print(new_boards)
+        print(new_moves)
         for i in range(len(new_moves)):
             if i % 2 != 0: # takes only boards from player two
                 temp = [num * -1 for num in new_boards[i]]  # boards must be inverted for player 2

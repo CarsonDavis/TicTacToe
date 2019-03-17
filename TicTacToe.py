@@ -1,7 +1,8 @@
 from random import choice
 from keras.models import load_model
 import numpy as np
-model = load_model('Models and Data/Smart Training/smart_model.h5')
+# model = load_model('Models and Data/Baseline/all_possible_games_3462.h5')
+model = load_model('Models and Data/Baseline/all_possible_games_3.h5')
 # old_model = load_model('Models and Data/Random Training/random_model.h5')
 
 # TODO: think about tracking the current player instead of passing around the player to every function
@@ -124,7 +125,7 @@ class Game:
         # change the functions in the turn map if you want to modify who plays who
 
         turn_map = {1: {'name': 'Player 1', 'move function': self.random_move},
-                    -1: {'name': 'Player 2', 'move function': self.random_move},
+                    -1: {'name': 'Player 2', 'move function': self.smart_move},
                     }
 
         self.whose_move = 1
@@ -138,7 +139,6 @@ class Game:
 
             new_move = turn_map[self.whose_move]['move function']()
             self.move(new_move)
-
 
         if print_on:
             self.print_board(self.current_board)
