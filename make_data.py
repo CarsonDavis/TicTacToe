@@ -33,9 +33,9 @@ def make_data(model, iterations, probability=1):
                     filtered_moves.append(new_moves[i])
 
         elif winner == -1:
-            print(winner)
-            print(new_boards)
-            print(new_moves)
+            # print(winner)
+            # print(new_boards)
+            # print(new_moves)
             for i in range(len(new_moves)):
                 if i % 2 != 0: # takes only boards from player two
                     temp = [num * -1 for num in new_boards[i]]  # boards must be inverted for player 2
