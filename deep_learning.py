@@ -21,7 +21,7 @@ print()
 all_winning_boards = winning_boards['boards']
 all_winning_moves = winning_boards['moves']
 
-for model_iteration in range(50):
+for model_iteration in range(5):
 
     X = np.array(all_winning_boards)
     y = to_categorical(all_winning_moves)
@@ -54,7 +54,7 @@ for model_iteration in range(50):
 
     print()
     print('##############################################################################################################################################')
-    print('Evaluation new model on the validation data')
+    print(f'Evaluation model {model_iteration + 1} on the validation data')
     print(model.evaluate(X_val, y_val))
     print()
 
@@ -68,7 +68,7 @@ for model_iteration in range(50):
     # print('probability to use new model in next data collection', probability)
 
 
-    print('Win percentages with the new model')
+    print(f'Win percentages against a random opponent using model {model_iteration + 1}')
     print(f'Player 1: {winner_history[1]["wins"]/10} %')
     print(f'Player 2: {winner_history[-1]["wins"]/10} %')
     print(f'Tie Game: {winner_history["tie"]["wins"]/10} %')
