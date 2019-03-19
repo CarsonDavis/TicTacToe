@@ -6,8 +6,7 @@ from keras import models, layers, optimizers, losses, metrics
 from make_data import make_data
 
 # generate baseline data for the first training of the model
-winning_boards, winner_history = make_data(model = None, iterations = 1000, probability=0)
-
+winning_data, losing_data, winner_history = make_data(model = None, iterations = 1000, probability=0)
 
 print()
 print('##############################################################################################################################################')
@@ -18,10 +17,10 @@ print(f'Tie Game: {winner_history["tie"]["wins"]/10} %')
 print('##############################################################################################################################################')
 print()
 
-all_winning_boards = winning_boards['boards']
-all_winning_moves = winning_boards['moves']
+all_winning_boards = winning_data['boards']
+all_winning_moves = winning_data['moves']
 
-for model_iteration in range(5):
+for model_iteration in range(10):
 
     X = np.array(all_winning_boards)
     y = to_categorical(all_winning_moves)
@@ -49,7 +48,7 @@ for model_iteration in range(5):
     history = model.fit(X_train,
                     y_train,
                     epochs=10,
-                    batch_size = 512,
+                    batch_size = 1024,
                     validation_data = (X_test, y_test))
 
     print()
@@ -59,10 +58,10 @@ for model_iteration in range(5):
     print()
 
     # run the new model to see how well it does when played 100% of the time
-    ignore_me, winner_history = make_data(model = model, iterations = 1000, probability=1)
+    ignore_me, ignore_me_2, winner_history = make_data(model = model, iterations = 1000, probability=1)
     
     # probability of player 1 using the model in the next training set is calculated by the percent games won or tied
-    probability = (1000-winner_history[-1]['wins'])/1000
+    probability = ((1000-winner_history[-1]['wins'])/1000)
     # print(winner_history)
     # print('percent wins with new model', winner_history[1]['wins'])
     # print('probability to use new model in next data collection', probability)
@@ -78,11 +77,11 @@ for model_iteration in range(5):
     print()
 
     # use the new model to collect new data. also use random moves to as a proxy for creativity
-    winning_boards, winner_history = make_data(model = model, iterations = 1000, probability=probability)
+    winning_data, losing_data, winner_history = make_data(model = model, iterations = 1000, probability=probability)
 
     # add newly generated training data to the corpus
-    all_winning_boards += winning_boards['boards'].copy()
-    all_winning_moves += winning_boards['moves'].copy()
+    all_winning_boards += winning_data['boards'].copy()
+    all_winning_moves += winning_data['moves'].copy()
 
 
 

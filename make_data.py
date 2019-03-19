@@ -13,8 +13,11 @@ def make_data(model, iterations, probability=1):
                     'tie': {'name': 'nobody', 'wins': 0}
                     }
 
-    all_boards = []
-    all_moves = []
+    all_winning_boards = []
+    all_winning_moves = []
+
+    all_losing_boards = []
+    all_losing_moves = []
 
     for game in range(iterations):
 
@@ -22,34 +25,46 @@ def make_data(model, iterations, probability=1):
         new_boards, new_moves, winner = play(model, print_on = False, probability = probability)
 
         winner_history[winner]['wins'] += 1
-        filtered_boards = []
-        filtered_moves = []
+        winning_boards = []
+        winning_moves = []
+
+        losing_boards = []
+        losing_moves = []
 
         # filter out the boards from the loser
         if winner == 1:
             for i in range(len(new_moves)):
-                if i % 2 == 0: # takes only boards from player one
-                    filtered_boards.append(new_boards[i])
-                    filtered_moves.append(new_moves[i])
+                if i % 2 == 0:  # takes only boards from player one
+                    winning_boards.append(new_boards[i])
+                    winning_moves.append(new_moves[i])
+                else:  # takes only boards from player two
+                    losing_boards.append(new_boards[i])
+                    losing_moves.append(new_moves[i])                   
 
         elif winner == -1:
-            # print(winner)
-            # print(new_boards)
-            # print(new_moves)
             for i in range(len(new_moves)):
-                if i % 2 != 0: # takes only boards from player two
-                    temp = [num * -1 for num in new_boards[i]]  # boards must be inverted for player 2
-                    filtered_boards.append(temp)
-                    filtered_moves.append(new_moves[i])
+                temp = [num * -1 for num in new_boards[i]]  # boards must be inverted for player 2
+                if i % 2 != 0:  # takes only boards from player two
+                    winning_boards.append(temp)
+                    winning_moves.append(new_moves[i])
+                else:  # takes only boards from player one
+                    losing_boards.append(temp)
+                    losing_moves.append(new_moves[i])                    
 
-        # add filtered boards to the data
-        if filtered_boards:
-            all_boards += filtered_boards
-            all_moves += filtered_moves
+        # add winning boards to the data
+        if winning_boards:
+            all_winning_boards += winning_boards
+            all_winning_moves += winning_moves
+
+            all_losing_boards += losing_boards
+            all_losing_moves += losing_moves
 
 
-    winning_boards = {'boards': all_boards,
-                      'moves': all_moves}
+    winning_data = {'boards': all_winning_boards,
+                      'moves': all_winning_moves}
 
-    return winning_boards, winner_history
+    losing_data = {'boards': all_losing_boards,
+                    'moves': all_losing_moves}
+
+    return winning_data, losing_data, winner_history
 
