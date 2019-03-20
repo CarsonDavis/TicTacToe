@@ -95,12 +95,29 @@ class Game:
         board_vector = self.board_to_vector(self.current_board)
 
         # run the board through the model and generated predictions
-        prediction_list = list(self.winning_model.predict(board_vector)[0])
+        winning_moves = self.winning_model.predict(board_vector)[0]
+        losing_moves = self.losing_model.predict(board_vector)[0]
+        prediction_list = list(winning_moves - losing_moves)
+
+        # print('#' * 20)
+        # print(self.current_board)
+        # print()
+
+        # print("Winning Moves")
+        # print(winning_moves)
+        # print()
+
+        # print('Losing Moves')
+        # print(losing_moves)
+        # print()
+        
+        # print(prediction_list)
+        # print()
 
         while sum(prediction_list):
             # take the move with the highest predicted value then remove it from the prediction list
             move = prediction_list.index(max(prediction_list))
-            prediction_list[move] = 0
+            prediction_list[move] = -1
 
             # make sure the move predicted by the model is actually available
             if move in self.valid_moves:
