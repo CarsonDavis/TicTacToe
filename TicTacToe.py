@@ -10,8 +10,9 @@ import numpy as np
 
 
 class Game:
-    def __init__(self, model):
-        self.model = model
+    def __init__(self, winning_model, losing_model):
+        self.winning_model = winning_model
+        self.losing_model = losing_model
         self.current_board = [0, 0, 0,
                               0, 0, 0,
                               0, 0, 0]
@@ -94,7 +95,7 @@ class Game:
         board_vector = self.board_to_vector(self.current_board)
 
         # run the board through the model and generated predictions
-        prediction_list = list(self.model.predict(board_vector)[0])
+        prediction_list = list(self.winning_model.predict(board_vector)[0])
 
         while sum(prediction_list):
             # take the move with the highest predicted value then remove it from the prediction list

@@ -1,12 +1,12 @@
 from TicTacToe import Game
 
-def play(model, print_on, probability):
-    game = Game(model)
+def play(winning_model, losing_model, print_on, probability):
+    game = Game(winning_model, losing_model)
     return game.play(print_on, probability)
 
 
 # json_path = 'Models and Data/Baseline/all_possible_games.json'
-def make_data(model, iterations, probability=1):
+def make_data(winning_model, losing_model, iterations, probability=1):
 
     winner_history = {1: {'name': 'player 1', 'wins': 0},
                     -1: {'name': 'player 2', 'wins': 0},
@@ -22,7 +22,7 @@ def make_data(model, iterations, probability=1):
     for game in range(iterations):
 
         # new_boards, new_moves, winner = make_data()
-        new_boards, new_moves, winner = play(model, print_on = False, probability = probability)
+        new_boards, new_moves, winner = play(winning_model, losing_model, print_on = False, probability = probability)
 
         winner_history[winner]['wins'] += 1
         winning_boards = []
